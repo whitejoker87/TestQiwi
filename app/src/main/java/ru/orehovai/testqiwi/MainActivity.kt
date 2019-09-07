@@ -30,14 +30,17 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.getFormData().observe(this, Observer {
             if (it != null){
-                for ()
-                val arrayAdapter = ArrayAdapter(
-                    this, android.R.layout.simple_dropdown_item_1line, mainViewModel.getFormData().value!!.content.elements[1].view.widget.choices
+                val arrayAdapter = AccountAdapter(
+                    this,
+                    R.layout.activity_main,
+                    R.id.autoText,
+                    mainViewModel.getFormData().value!!.content.elements[1].view.widget.choices
                     //resources.getStringArray(R.array.names)
                 )
 
                 textView.setAdapter(arrayAdapter)
-                textView.setOnClickListener { textView.showDropDown() }
+                textView.setOnClickListener {
+                    textView.showDropDown() }
             }
         })
     }
