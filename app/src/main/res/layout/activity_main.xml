@@ -52,43 +52,71 @@
             />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bik_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:customInput='@{mainViewModel.mfoFull.view.widget.keyboard.equals("numeric")? InputType.TYPE_CLASS_NUMBER : InputType.TYPE_CLASS_TEXT}'
-
-                android:ems="10"
-                android:id="@+id/et_bik"
                 android:hint="@{mainViewModel.mfoFull.view.prompt}"
+                android:visibility='@{mainViewModel.mfoFull.name.equals("")? View.GONE : View.VISIBLE}'
+
                 android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/id_card_number_layout"/>
+                app:layout_constraintTop_toBottomOf="@+id/id_card_number_layout"
+                >
+            <com.google.android.material.textfield.TextInputEditText
+                    app:customInput='@{mainViewModel.mfoFull.view.widget.keyboard}'
 
-        <EditText
+                    android:ems="10"
+                    android:id="@android:id/input"
+                    android:hint="@{mainViewModel.mfoFull.view.title}"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@drawable/hint_selector"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/account_or_card_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/et_account_number"
-                android:hint="Номер счета"
+                android:hint="@{mainViewModel.accountOrCardNumberFull.view.prompt}"
+                android:visibility='@{mainViewModel.accountOrCardNumberFull.name.equals("")? View.GONE : View.VISIBLE}'
+
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/et_bik"
+                app:layout_constraintTop_toBottomOf="@+id/bik_layout"
                 android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+
+                    android:ems="10"
+                    android:id="@+id/et_account_or_card_number"
+                    android:hint="@{mainViewModel.accountOrCardNumberFull.view.title}"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@drawable/hint_selector"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/payment_type_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
+                android:visibility='@{mainViewModel.urgentFull.name.equals("")? View.GONE : View.VISIBLE}'
+                android:hint="@{mainViewModel.urgentFull.view.title}"
+                app:hintAnimationEnabled="false"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_account_number"
+                app:layout_constraintTop_toBottomOf="@+id/account_or_card_number"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
 
@@ -104,8 +132,8 @@
                     android:singleLine="true"
                     android:inputType="textNoSuggestions|textVisiblePassword"
                     android:cursorVisible="false"
-                    android:text="Обычный платеж"
-                    android:hint="Тип платежа"
+
+                    android:text="@{mainViewModel.urgentFull.view.prompt}"
 
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -123,6 +151,7 @@
                 android:ems="10"
                 android:id="@+id/et_first_name"
                 android:hint="Фамилия владельца счета"
+                android:visibility='@{mainViewModel.lNameFull.name.equals("")? View.GONE : View.VISIBLE}'
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/payment_type_layout"
                 android:layout_marginStart="16dp"
@@ -137,6 +166,7 @@
                 android:ems="10"
                 android:id="@+id/et_last_name"
                 android:hint="Имя владельца счета"
+                android:visibility='@{mainViewModel.fNameFull.name.equals("")? View.GONE : View.VISIBLE}'
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/et_first_name"
                 android:layout_marginStart="16dp"
@@ -151,6 +181,7 @@
                 android:ems="10"
                 android:id="@+id/et_father_name"
                 android:hint="Отчество владельца счета"
+                android:visibility='@{mainViewModel.mNameFull.name.equals("")? View.GONE : View.VISIBLE}'
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/et_last_name"
                 android:layout_marginStart="16dp"

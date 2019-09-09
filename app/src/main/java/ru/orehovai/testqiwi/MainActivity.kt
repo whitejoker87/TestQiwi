@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
 
         val textView = binding.idCardNumber
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.accountTypeFull.observe(this, Observer {
             if (it != null){
                 binding.invalidateAll()
-                binding.executePendingBindings()
+                //binding.executePendingBindings()
                 val arrayAdapter = AccountAdapter(
                     this,
                     R.layout.activity_main,
@@ -59,10 +60,9 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        mainViewModel.mfoFull.observe(this, Observer {
+        mainViewModel.accountOrCardNumberFull.observe(this, Observer {
             if (it != null){
-                binding.invalidateAll()
-                binding.executePendingBindings()
+                //binding.invalidateAll()
             }
         })
 

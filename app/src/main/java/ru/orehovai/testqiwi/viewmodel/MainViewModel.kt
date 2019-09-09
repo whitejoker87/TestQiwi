@@ -25,13 +25,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var validatorRegexAccountType = Regex("")
 
 
-    val accountTypeFull = MutableLiveData<Elements>()
-    val mfoFull = MutableLiveData<Elements>()
-    val accountOrCardNumberFull = MutableLiveData<Elements>()
-    val urgentFull = MutableLiveData<Elements>()
-    val fNameFull = MutableLiveData<Elements>()
-    val lNameFull = MutableLiveData<Elements>()
-    val mNameFull = MutableLiveData<Elements>()
+    val accountTypeFull = MutableLiveData<Elements>(Elements())
+    val mfoFull = MutableLiveData<Elements>(Elements())
+    val accountOrCardNumberFull = MutableLiveData<Elements>(Elements())
+    val urgentFull = MutableLiveData<Elements>(Elements())
+    val fNameFull = MutableLiveData<Elements>(Elements())
+    val lNameFull = MutableLiveData<Elements>(Elements())
+    val mNameFull = MutableLiveData<Elements>(Elements())
 
 
     /*values of form data*/
@@ -81,6 +81,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onAccountTypeItemClick(listView: AdapterView<*>, position: Int) {
 
+        clearValues()
+
         val choice = listView.getItemAtPosition(position) as Choice
 
         for (element in formData.value!!.content.elements) {
@@ -113,6 +115,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //            }
         }
 
+    }
+
+    private fun clearValues() {
+        mfoFull.value = Elements()
+        accountOrCardNumberFull.value = Elements()
+        urgentFull.value = Elements()
+        lNameFull.value = Elements()
+        fNameFull.value = Elements()
+        mNameFull.value = Elements()
     }
 
 }

@@ -18,7 +18,10 @@ object BindingAdapters {
 
     @BindingAdapter("customInput")
     @JvmStatic
-    fun setCustomInput(view: EditText, inputType: Int) {
-        view.inputType = inputType
+    fun setCustomInput(view: EditText, inputType: String) {
+        if (inputType.isNotEmpty()){
+            if (inputType == "numeric") view.inputType = InputType.TYPE_CLASS_NUMBER
+            else view.inputType = InputType.TYPE_CLASS_TEXT
+        }
     }
 }
