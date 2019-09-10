@@ -2,9 +2,8 @@ package ru.orehovai.testqiwi
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
-import android.widget.AutoCompleteTextView
-import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -29,17 +28,20 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
 
-        val textView = binding.idCardNumber
+        val tvCardOrAccountSpinner = binding.idCardNumber
+        val tvUrgentSpinner = binding.paymentType
 
-//android:onItemSelected="@{(parent, view, position, id) -> mainViewModel.onAccountTypeItemClick(parent, position)}"
-        textView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        //android:onItemSelected="@{(parent, view, position, id) -> mainViewModel.onAccountTypeItemClick(parent, position)}"
+        tvCardOrAccountSpinner.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             mainViewModel.onAccountTypeItemClick(parent, position)
         }
+
+
         mainViewModel.getForm()
 
         mainViewModel.getFormData().observe(this, Observer {
             if (it != null) {
-                mainViewModel.makeForm()
+                mainViewModel.makeSpinner(it.content.elements)
             }
         })
 
@@ -51,18 +53,32 @@ class MainActivity : AppCompatActivity() {
                     this,
                     R.layout.activity_main,
                     R.id.autoText,
-                    mainViewModel.accountTypeFull.value!!.view.widget.choices
+                    it.view.widget.choices
                 )
 
-                textView.setAdapter(arrayAdapter)
-                textView.setOnClickListener {
-                    textView.showDropDown() }
+                tvCardOrAccountSpinner.setAdapter(arrayAdapter)
+                tvCardOrAccountSpinner.setOnTouchListener(object : View.OnTouchListener {
+                    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                        tvCardOrAccountSpinner.showDropDown()
+                        return true
+                    }
+                })
+
             }
         })
 
-        mainViewModel.accountOrCardNumberFull.observe(this, Observer {
+        mainViewModel.urgentFull.observe(this, Observer {
             if (it != null){
-                //binding.invalidateAll()
+                val urgentAdapter = AccountAdapter(
+                    this,
+                    R.layout.activity_main,
+                    R.id.autoText,
+                    it.view.widget.choices
+                )
+
+                tvUrgentSpinner.setAdapter(urgentAdapter)
+                tvUrgentSpinner.setOnClickListener {
+                    tvUrgentSpinner.showDropDown() }
             }
         })
 

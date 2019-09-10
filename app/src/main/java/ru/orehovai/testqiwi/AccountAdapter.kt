@@ -28,7 +28,7 @@ class AccountAdapter(
         }
 
         override fun performFiltering(constraint: CharSequence?): FilterResults = FilterResults()
-        override fun publishResults(constraint: CharSequence, results: FilterResults?) {}
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {}
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

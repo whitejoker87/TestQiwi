@@ -22,7 +22,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val accountType = MutableLiveData<Choice>()
 
-    var validatorRegexAccountType = Regex("")
+    var validatorRegex = Regex("")
 
 
     val accountTypeFull = MutableLiveData<Elements>(Elements())
@@ -64,15 +64,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    fun makeForm() {
-        for (element in formData.value!!.content.elements) {
-            if (element.type == "field" && element.name == "account_type") {
-                validatorRegexAccountType = element.validator.predicate.pattern.toRegex()
+    fun makeSpinner(listElements: List<Elements>) {
+        for (element in listElements) {
+            if (element.type == "field" && (element.name == "account_type" || element.name == "urgent")) {
+                validatorRegex = element.validator.predicate.pattern.toRegex()
                 if (element.validator.message.isNotEmpty() &&
                     element.view.title.isNotEmpty() &&
                     element.view.prompt.isNotEmpty()
                 ) {
-                    accountTypeFull.value = element
+                    if (element.name == "account_type") accountTypeFull.value = element
+                    //else if (element.name == "urgent") urgentFull.value = element
                 }
             }
         }
@@ -88,7 +89,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         for (element in formData.value!!.content.elements) {
             setAccountType(choice)
             if (element.type == "dependency") {
-                if (validatorRegexAccountType.matches(choice.value)) {
+                if (validatorRegex.matches(choice.value)) {
 
                     if (element.condition.predicate.pattern.toRegex().matches(choice.value)) {
                         for (elementInner in element.content.elements) {
