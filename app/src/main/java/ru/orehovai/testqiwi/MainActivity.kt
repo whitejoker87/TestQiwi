@@ -2,8 +2,6 @@ package ru.orehovai.testqiwi
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -57,13 +55,8 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 tvCardOrAccountSpinner.setAdapter(arrayAdapter)
-                tvCardOrAccountSpinner.setOnTouchListener(object : View.OnTouchListener {
-                    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                        tvCardOrAccountSpinner.showDropDown()
-                        return true
-                    }
-                })
-
+                tvCardOrAccountSpinner.setOnClickListener {
+                    tvCardOrAccountSpinner.showDropDown() }
             }
         })
 
