@@ -10,7 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.orehovai.testqiwi.model.Choice
-import ru.orehovai.testqiwi.model.Elements
+import ru.orehovai.testqiwi.model.Element
 import ru.orehovai.testqiwi.model.FormResponse
 import ru.orehovai.testqiwi.utils.Retrofit
 
@@ -20,22 +20,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val formData = MutableLiveData<FormResponse>()
 
-    val accountType = MutableLiveData<Choice>()
+    private val accountType = MutableLiveData<Choice>()
+    private val urgentType = MutableLiveData<Choice>()
 
     var validatorRegex = Regex("")
 
 
-    val accountTypeFull = MutableLiveData<Elements>(Elements())
-    val mfoFull = MutableLiveData<Elements>(Elements())
-    val accountOrCardNumberFull = MutableLiveData<Elements>(Elements())
-    val urgentFull = MutableLiveData<Elements>(Elements())
-    val fNameFull = MutableLiveData<Elements>(Elements())
-    val lNameFull = MutableLiveData<Elements>(Elements())
-    val mNameFull = MutableLiveData<Elements>(Elements())
-
-
-    /*values of form data*/
-
+    val accountTypeFull = MutableLiveData<Element>(Element())
+    val mfoFull = MutableLiveData<Element>(Element())
+    val accountOrCardNumberFull = MutableLiveData<Element>(Element())
+    val urgentFull = MutableLiveData<Element>(Element())
+    val fNameFull = MutableLiveData<Element>(Element())
+    val lNameFull = MutableLiveData<Element>(Element())
+    val mNameFull = MutableLiveData<Element>(Element())
 
     fun setFormData(data: FormResponse) {
         formData.value = data
@@ -47,7 +44,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         accountType.value = value
     }
 
-//    fun getAccountType(): LiveData<Choice> = accountType
+    fun setUrgentType(value: Choice) {
+        urgentType.value = value
+    }
+
+
+    fun getAccountType(): LiveData<Choice> = accountType
+
+    fun getUrgentType(): LiveData<Choice> = urgentType
 
     fun getForm() {
         Retrofit.api?.getForm()?.enqueue(object : Callback<FormResponse> {
@@ -64,7 +68,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    fun makeSpinner(listElements: List<Elements>) {
+    fun makeSpinner(listElements: List<Element>) {
         for (element in listElements) {
             if (element.type == "field" && (element.name == "account_type" || element.name == "urgent")) {
                 validatorRegex = element.validator.predicate.pattern.toRegex()
@@ -86,8 +90,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         val choice = listView.getItemAtPosition(position) as Choice
 
+        setAccountType(choice)
+
         for (element in formData.value!!.content.elements) {
-            setAccountType(choice)
+
             if (element.type == "dependency") {
                 if (validatorRegex.matches(choice.value)) {
 
@@ -102,29 +108,121 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                 "mname" -> { mNameFull.value = elementInner}
                             }
                         }
-
                     }
                 }
             }
-//            if (element.type == "dependency" && element.condition.field == "account_type") {
-//                if (element.condition.predicate.pattern.toRegex().matches(choice.value)) {
-//                    when (choice.value) {
-//                        2 -> {}
-//                        5 -> {}
-//                    }
-//                }
-//            }
         }
+    }
+
+    fun onUrgentItemClick(listView: AdapterView<*>, position: Int) {
+
+        setUrgentType(listView.getItemAtPosition(position) as Choice)
 
     }
 
     private fun clearValues() {
-        mfoFull.value = Elements()
-        accountOrCardNumberFull.value = Elements()
-        urgentFull.value = Elements()
-        lNameFull.value = Elements()
-        fNameFull.value = Elements()
-        mNameFull.value = Elements()
+        mfoFull.value = Element()
+        accountOrCardNumberFull.value = Element()
+        urgentFull.value = Element()
+        lNameFull.value = Element()
+        fNameFull.value = Element()
+        mNameFull.value = Element()
     }
 
+
+    fun onFormFieldTextChanged(value: CharSequence?, element: MutableLiveData<Element>) {
+        if (value != null) {
+            element.updateCorrect(element.value!!.validator.predicate.pattern.toRegex().matches(value))
+        }
+    }
+
+    fun onSpinnerTextChanged(value: CharSequence?, element: MutableLiveData<Element>) {
+        if (value != null) {
+            element.updateCorrect(element.value!!.validator.predicate.pattern.toRegex().matches(urgentType.value!!.title))
+        }
+    }
+//    fun onAccountOrCardNumberTextChanged(accountOrCardNumber: CharSequence?) {
+//        if (confirmPassword != null) {
+//            if (!TextUtils.isEmpty(confirmPassword)) {
+//                when {
+//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
+//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
+//                    else -> {
+//                        setConfirmPasswordCorrect(true)
+//                        setEqualsPasswords(true)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    fun onUrgentTextChanged(urgent: CharSequence?) {
+//        if (confirmPassword != null) {
+//            if (!TextUtils.isEmpty(confirmPassword)) {
+//                when {
+//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
+//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
+//                    else -> {
+//                        setConfirmPasswordCorrect(true)
+//                        setEqualsPasswords(true)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    fun onFNameTextChanged(fName: CharSequence?) {
+//        if (confirmPassword != null) {
+//            if (!TextUtils.isEmpty(confirmPassword)) {
+//                when {
+//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
+//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
+//                    else -> {
+//                        setConfirmPasswordCorrect(true)
+//                        setEqualsPasswords(true)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    fun onLNameTextChanged(lName: CharSequence?) {
+//        if (confirmPassword != null) {
+//            if (!TextUtils.isEmpty(confirmPassword)) {
+//                when {
+//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
+//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
+//                    else -> {
+//                        setConfirmPasswordCorrect(true)
+//                        setEqualsPasswords(true)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    fun onMNamePasswordTextChanged(mName: CharSequence?) {
+//        if (confirmPassword != null) {
+//            if (!TextUtils.isEmpty(confirmPassword)) {
+//                when {
+//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
+//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
+//                    else -> {
+//                        setConfirmPasswordCorrect(true)
+//                        setEqualsPasswords(true)
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+
+
+}
+
+//функция для оповещения наблюдателей после изменения поля isCorrect обычно нужно перезаписать)
+fun  MutableLiveData<Element>.updateCorrect(isCorrect: Boolean) {
+    val updatedElement = this.value as Element
+    updatedElement.isCorrect = isCorrect
+    this.value = updatedElement
 }

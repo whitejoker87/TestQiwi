@@ -9,11 +9,12 @@ data class FormResponse (
 
 data class Content (
 
-    @SerializedName("elements") val elements : List<Elements> = listOf()
+    @SerializedName("elements") val elements : List<Element> = listOf()
 )
 
-data class Elements (
+data class Element (
 
+    var isCorrect: Boolean = false,
     @SerializedName("type") var type : String = "",
     @SerializedName("name") var name : String = "",
     @SerializedName("value") var value : String = "",

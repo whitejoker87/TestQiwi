@@ -34,6 +34,9 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.onAccountTypeItemClick(parent, position)
         }
 
+        tvUrgentSpinner.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            mainViewModel.onUrgentItemClick(parent, position)
+        }
 
         mainViewModel.getForm()
 
@@ -45,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.accountTypeFull.observe(this, Observer {
             if (it != null){
-                binding.invalidateAll()
+                //binding.invalidateAll()
                 //binding.executePendingBindings()
                 val arrayAdapter = AccountAdapter(
                     this,
