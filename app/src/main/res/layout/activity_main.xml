@@ -118,7 +118,6 @@
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:text="@{mainViewModel.urgentFull.view.prompt}"
-                    android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.accountOrCardNumberFull)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"

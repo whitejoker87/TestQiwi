@@ -70,7 +70,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun makeSpinner(listElements: List<Element>) {
         for (element in listElements) {
-            if (element.type == "field" && (element.name == "account_type" || element.name == "urgent")) {
+            if (element.type == "field" && (element.name == "account_type" /*|| element.name == "urgent"*/)) {
                 validatorRegex = element.validator.predicate.pattern.toRegex()
                 if (element.validator.message.isNotEmpty() &&
                     element.view.title.isNotEmpty() &&
@@ -117,6 +117,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun onUrgentItemClick(listView: AdapterView<*>, position: Int) {
 
         setUrgentType(listView.getItemAtPosition(position) as Choice)
+        //urgentFull.updateCorrect(true)
 
     }
 

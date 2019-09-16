@@ -29,15 +29,6 @@ class MainActivity : AppCompatActivity() {
         val tvCardOrAccountSpinner = binding.idCardNumber
         val tvUrgentSpinner = binding.paymentType
 
-        //android:onItemSelected="@{(parent, view, position, id) -> mainViewModel.onAccountTypeItemClick(parent, position)}"
-        tvCardOrAccountSpinner.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            mainViewModel.onAccountTypeItemClick(parent, position)
-        }
-
-        tvUrgentSpinner.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            mainViewModel.onUrgentItemClick(parent, position)
-        }
-
         mainViewModel.getForm()
 
         mainViewModel.getFormData().observe(this, Observer {
@@ -64,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel.urgentFull.observe(this, Observer {
-            if (it != null){
+            if (it != null && it.name == "urgent"){
                 val urgentAdapter = AccountAdapter(
                     this,
                     R.layout.activity_main,
@@ -77,6 +68,15 @@ class MainActivity : AppCompatActivity() {
                     tvUrgentSpinner.showDropDown() }
             }
         })
+
+        //android:onItemSelected="@{(parent, view, position, id) -> mainViewModel.onAccountTypeItemClick(parent, position)}"
+        tvCardOrAccountSpinner.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            mainViewModel.onAccountTypeItemClick(parent, position)
+        }
+
+        tvUrgentSpinner.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            mainViewModel.onUrgentItemClick(parent, position)
+        }
 
     }
 
