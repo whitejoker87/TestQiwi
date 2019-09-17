@@ -8,8 +8,17 @@ import androidx.lifecycle.ViewModelProviders
 import ru.orehovai.testqiwi.databinding.ActivityMainBinding
 import ru.orehovai.testqiwi.viewmodel.MainViewModel
 import android.widget.AdapterView
-
-
+import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
+import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
+import ru.orehovai.testqiwi.model.Element
+import ru.orehovai.testqiwi.viewmodel.updateCorrect
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -29,6 +39,12 @@ class MainActivity : AppCompatActivity() {
         val tvCardOrAccountSpinner = binding.idCardNumber
         val tvUrgentSpinner = binding.paymentType
 
+        val textMfo = fillDisposable(et_mfo_number, mainViewModel.mfoFull)
+        val textAccountOrCard = fillDisposable(et_account_or_card_number, mainViewModel.accountOrCardNumberFull)
+        val textFName = fillDisposable(et_first_name, mainViewModel.fNameFull)
+        val textLName = fillDisposable(et_last_name, mainViewModel.lNameFull)
+        val textMName = fillDisposable(et_middle_name, mainViewModel.mNameFull)
+
         mainViewModel.getForm()
 
         mainViewModel.getFormData().observe(this, Observer {
@@ -36,6 +52,9 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.makeSpinner(it.content.elements)
             }
         })
+
+
+
 
         mainViewModel.accountTypeFull.observe(this, Observer {
             if (it != null){
@@ -79,5 +98,12 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun fillDisposable(field: TextView, element: MutableLiveData<Element>): Disposable = RxTextView.textChanges(field)
+        .throttleLatest(3, TimeUnit.SECONDS)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .map {it -> element.value!!.validator.predicate.pattern.toRegex().matches(it)}
+        .subscribe { result -> element.updateCorrect(result)}
 
 }

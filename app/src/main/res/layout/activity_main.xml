@@ -62,7 +62,7 @@
             <com.google.android.material.textfield.TextInputEditText
                     app:customInput='@{mainViewModel.mfoFull.view.widget.keyboard}'
                     android:ems="10"
-                    android:id="@android:id/input"
+                    android:id="@+id/et_mfo_number"
                     android:hint="@{mainViewModel.mfoFull.view.title}"
                     android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.mfoFull)}"
                     android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                     android:ems="10"
                     android:id="@+id/et_account_or_card_number"
                     android:hint="@{mainViewModel.accountOrCardNumberFull.view.title}"
-                    android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.accountOrCardNumberFull)}"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColorHint="@drawable/hint_selector"/>
