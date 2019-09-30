@@ -1,4 +1,4 @@
-package ru.orehovai.testqiwi
+package ru.orehovai.testqiwi.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,11 +11,11 @@ import android.widget.AdapterView
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import com.jakewharton.rxbinding2.widget.RxTextView
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.orehovai.testqiwi.R
 import ru.orehovai.testqiwi.model.Element
 import ru.orehovai.testqiwi.viewmodel.updateCorrect
 import java.util.concurrent.TimeUnit
@@ -29,6 +29,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    lateinit var textMfo: Disposable
+    lateinit var textAccountOrCard: Disposable
+    lateinit var textFName: Disposable
+    lateinit var textLName: Disposable
+    lateinit var textMName: Disposable
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +45,11 @@ class MainActivity : AppCompatActivity() {
         val tvCardOrAccountSpinner = binding.idCardNumber
         val tvUrgentSpinner = binding.paymentType
 
-        val textMfo = fillDisposable(et_mfo_number, mainViewModel.mfoFull)
-        val textAccountOrCard = fillDisposable(et_account_or_card_number, mainViewModel.accountOrCardNumberFull)
-        val textFName = fillDisposable(et_first_name, mainViewModel.fNameFull)
-        val textLName = fillDisposable(et_last_name, mainViewModel.lNameFull)
-        val textMName = fillDisposable(et_middle_name, mainViewModel.mNameFull)
+        textMfo = fillDisposable(et_mfo_number, mainViewModel.mfoFull)
+        textAccountOrCard = fillDisposable(et_account_or_card_number, mainViewModel.accountOrCardNumberFull)
+        textFName = fillDisposable(et_first_name, mainViewModel.fNameFull)
+        textLName = fillDisposable(et_last_name, mainViewModel.lNameFull)
+        textMName = fillDisposable(et_middle_name, mainViewModel.mNameFull)
 
         mainViewModel.getForm()
 
@@ -54,12 +60,8 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-
-
         mainViewModel.accountTypeFull.observe(this, Observer {
-            if (it != null){
-                //binding.invalidateAll()
-                //binding.executePendingBindings()
+            if (it != null) {
                 val arrayAdapter = AccountAdapter(
                     this,
                     R.layout.activity_main,
@@ -69,12 +71,13 @@ class MainActivity : AppCompatActivity() {
 
                 tvCardOrAccountSpinner.setAdapter(arrayAdapter)
                 tvCardOrAccountSpinner.setOnClickListener {
-                    tvCardOrAccountSpinner.showDropDown() }
+                    tvCardOrAccountSpinner.showDropDown()
+                }
             }
         })
 
         mainViewModel.urgentFull.observe(this, Observer {
-            if (it != null && it.name == "urgent"){
+            if (it != null && it.name == "urgent") {
                 val urgentAdapter = AccountAdapter(
                     this,
                     R.layout.activity_main,
@@ -84,7 +87,8 @@ class MainActivity : AppCompatActivity() {
 
                 tvUrgentSpinner.setAdapter(urgentAdapter)
                 tvUrgentSpinner.setOnClickListener {
-                    tvUrgentSpinner.showDropDown() }
+                    tvUrgentSpinner.showDropDown()
+                }
             }
         })
 
@@ -99,11 +103,27 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun fillDisposable(field: TextView, element: MutableLiveData<Element>): Disposable = RxTextView.textChanges(field)
-        .throttleLatest(3, TimeUnit.SECONDS)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .map {it -> element.value!!.validator.predicate.pattern.toRegex().matches(it)}
-        .subscribe { result -> element.updateCorrect(result)}
+
+    override fun onDestroy() {
+        textMfo.dispose()
+        textAccountOrCard.dispose()
+        textFName.dispose()
+        textLName.dispose()
+        textMName.dispose()
+        super.onDestroy()
+    }
+
+
+//    android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.mfoFull)}"
+    private fun fillDisposable(field: TextView, element: MutableLiveData<Element>): Disposable =
+        RxTextView.textChanges(field)
+            //.skip(1)
+            .throttleLatest(3, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { it -> element.value!!.validator.predicate.pattern.toRegex().matches(it) }
+            .subscribe { result -> element.updateCorrect(result) }
 
 }
+
+//comment for review

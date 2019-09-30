@@ -14,7 +14,7 @@ data class Content (
 
 data class Element (
 
-    var isCorrect: Boolean = false,
+    var isCorrect: Boolean = true,
     @SerializedName("type") var type : String = "",
     @SerializedName("name") var name : String = "",
     @SerializedName("value") var value : String = "",

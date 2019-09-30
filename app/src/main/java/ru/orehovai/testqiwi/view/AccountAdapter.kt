@@ -1,4 +1,4 @@
-package ru.orehovai.testqiwi
+package ru.orehovai.testqiwi.view
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import ru.orehovai.testqiwi.model.Choice
 import android.widget.Filter
-
+import ru.orehovai.testqiwi.R
 
 
 class AccountAdapter(
@@ -22,7 +22,7 @@ class AccountAdapter(
     /**
      * Custom Filter implementation for custom suggestions we provide.
      */
-    internal var nameFilter: Filter = object : Filter() {
+    internal var valueFilter: Filter = object : Filter() {
         override fun convertResultToString(resultValue: Any): CharSequence {
             return (resultValue as Choice).title
         }
@@ -37,20 +37,15 @@ class AccountAdapter(
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             view = inflater.inflate(R.layout.adapter_autotext, parent, false)
         }
-        val people = getItem(position)
-        if (people != null) {
+        val choice = getItem(position)
+        if (choice != null) {
             val lblName = view!!.findViewById(textViewResourceId) as TextView
-            lblName.text = people.title
-//            lblName.setOnClickListener {
-//                View.OnClickListener {
-//
-//                }
-//            }
+            lblName.text = choice.title
         }
         return view!!
     }
 
     override fun getFilter(): Filter {
-        return nameFilter
+        return valueFilter
     }
 }

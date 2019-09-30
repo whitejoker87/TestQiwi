@@ -7,11 +7,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Action
-import io.reactivex.functions.Function
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,7 +15,6 @@ import ru.orehovai.testqiwi.model.Choice
 import ru.orehovai.testqiwi.model.Element
 import ru.orehovai.testqiwi.model.FormResponse
 import ru.orehovai.testqiwi.utils.Retrofit
-import java.util.concurrent.TimeUnit
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -41,9 +35,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val fNameFull = MutableLiveData<Element>(Element())
     val lNameFull = MutableLiveData<Element>(Element())
     val mNameFull = MutableLiveData<Element>(Element())
-
-    val fieldSubject = PublishSubject.create<String>()
-    lateinit var fieldObservable: Observable<Boolean>
 
     fun setFormData(data: FormResponse) {
         formData.value = data
@@ -81,14 +72,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun makeSpinner(listElements: List<Element>) {
         for (element in listElements) {
-            if (element.type == "field" && (element.name == "account_type" /*|| element.name == "urgent"*/)) {
+            if (element.type == "field" && (element.name == "account_type")) {
                 validatorRegex = element.validator.predicate.pattern.toRegex()
                 if (element.validator.message.isNotEmpty() &&
                     element.view.title.isNotEmpty() &&
                     element.view.prompt.isNotEmpty()
                 ) {
-                    if (element.name == "account_type") accountTypeFull.value = element
-                    //else if (element.name == "urgent") urgentFull.value = element
+                    accountTypeFull.value = element
                 }
             }
         }
@@ -128,7 +118,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun onUrgentItemClick(listView: AdapterView<*>, position: Int) {
 
         setUrgentType(listView.getItemAtPosition(position) as Choice)
-        //urgentFull.updateCorrect(true)
 
     }
 
@@ -140,128 +129,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         fNameFull.value = Element()
         mNameFull.value = Element()
     }
-
-
-//    val btnSubject = PublishSubject.create<Boolean>()
-//    val textObservable = RxTextView.textChangeEvents(editText)
-//        .filter { validateText(it.text().toString()) }
-//
-//    btnSubject.flatMap { textObservable }
-//    .subscribe({
-//        Toast.makeText(this, "Text is correct", Toast.LENGTH_SHORT).show()
-//    })
-//
-//
-//    btn.setOnClickListener {
-//        btnSubject.onNext(true)
-//    }
-
-    fun onFormFieldTextChanged(value: CharSequence?, element: MutableLiveData<Element>) {
-        if (value != null && value.toString() != "") {
-//            element.updateCorrect(element.value!!.validator.predicate.pattern.toRegex().matches(value))
-//            fieldObservable = Observable.just(element.value!!.validator.predicate.pattern.toRegex().matches(value))
-//            fieldObservable.throttleLatest(3, TimeUnit.SECONDS)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe { result -> element.updateCorrect(result)}
-        }
-
-    }
-
-//    fun testRX(value: CharSequence?, element: MutableLiveData<Element>): Disposable
-//            = (Observable.just(onFormFieldTextChanged(value,element)).throttleLatest(3, TimeUnit.SECONDS)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe { result -> element.updateCorrect(result)})
-
-//    private Object oldMethod() { ... }
-//
-//    public Observable<Object> newMethod() {
-//        return Observable.just(oldMethod());
-//    }
-
-    fun onSpinnerTextChanged(value: CharSequence?, element: MutableLiveData<Element>) {
-        if (value != null) {
-            element.updateCorrect(element.value!!.validator.predicate.pattern.toRegex().matches(urgentType.value!!.title))
-        }
-    }
-//    fun onAccountOrCardNumberTextChanged(accountOrCardNumber: CharSequence?) {
-//        if (confirmPassword != null) {
-//            if (!TextUtils.isEmpty(confirmPassword)) {
-//                when {
-//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
-//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
-//                    else -> {
-//                        setConfirmPasswordCorrect(true)
-//                        setEqualsPasswords(true)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun onUrgentTextChanged(urgent: CharSequence?) {
-//        if (confirmPassword != null) {
-//            if (!TextUtils.isEmpty(confirmPassword)) {
-//                when {
-//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
-//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
-//                    else -> {
-//                        setConfirmPasswordCorrect(true)
-//                        setEqualsPasswords(true)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun onFNameTextChanged(fName: CharSequence?) {
-//        if (confirmPassword != null) {
-//            if (!TextUtils.isEmpty(confirmPassword)) {
-//                when {
-//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
-//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
-//                    else -> {
-//                        setConfirmPasswordCorrect(true)
-//                        setEqualsPasswords(true)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun onLNameTextChanged(lName: CharSequence?) {
-//        if (confirmPassword != null) {
-//            if (!TextUtils.isEmpty(confirmPassword)) {
-//                when {
-//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
-//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
-//                    else -> {
-//                        setConfirmPasswordCorrect(true)
-//                        setEqualsPasswords(true)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun onMNamePasswordTextChanged(mName: CharSequence?) {
-//        if (confirmPassword != null) {
-//            if (!TextUtils.isEmpty(confirmPassword)) {
-//                when {
-//                    confirmPassword.length < 6 -> setConfirmPasswordCorrect(false)
-//                    confirmPassword.toString() != getTextPassword().value -> setEqualsPasswords(false)
-//                    else -> {
-//                        setConfirmPasswordCorrect(true)
-//                        setEqualsPasswords(true)
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
-
 }
 
 //функция для оповещения наблюдателей после изменения поля isCorrect обычно нужно перезаписать)
