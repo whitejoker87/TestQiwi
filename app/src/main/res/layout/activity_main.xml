@@ -1,54 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="mainViewModel" type="ru.orehovai.testqiwi.viewmodel.MainViewModel"/>
+        <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Выбран Номер карты"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp" android:id="@+id/tv_card_number"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/newMeasure_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_card_number"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-
-            android:textColorHint="@color/design_default_color_primary_dark">
-
-        <AutoCompleteTextView
-                android:id="@+id/newMeasure"
-                android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/id_card_number_layout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-
-                android:imeOptions="actionNext|flagNoExtractUi"
-                android:singleLine="true"
-                android:inputType="textNoSuggestions|textVisiblePassword"
-                android:cursorVisible="false"
-                android:text="huihuhiuhi"
-                android:hint="fire"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:hint="@{mainViewModel.accountTypeFull.view.prompt}"
 
-                android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
-                android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
-                android:drawableTint="@color/cardview_shadow_start_color"
-        />
-    </com.google.android.material.textfield.TextInputLayout>
+                app:errorText='@{mainViewModel.accountType != null ? "" : mainViewModel.accountTypeFull.validator.message}'
 
+                android:theme="@style/TextInputLayoutAppearance"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <AutoCompleteTextView
+                    android:id="@+id/id_card_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext|flagNoExtractUi"
+                    android:singleLine="true"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:cursorVisible="false"
+                    android:text="@{mainViewModel.accountTypeFull.view.title}"
+                    android:focusable="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+                    android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+                    android:drawableTint="@color/cardview_dark_background"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bik_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@{mainViewModel.mfoFull.view.prompt}"
+                android:visibility='@{mainViewModel.mfoFull.name.equals("")? View.GONE : View.VISIBLE}'
+                app:errorText='@{mainViewModel.mfoFull.isCorrect ? "" : mainViewModel.mfoFull.validator.message}'
+                app:hintAnimationEnabled="false"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/id_card_number_layout">
+            <com.google.android.material.textfield.TextInputEditText
+                    app:customInput='@{mainViewModel.mfoFull.view.widget.keyboard}'
+                    android:ems="10"
+                    android:id="@+id/et_mfo_number"
+                    android:hint="@{mainViewModel.mfoFull.view.title}"
+                    android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.mfoFull)}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@drawable/hint_selector"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/account_or_card_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@{mainViewModel.accountOrCardNumberFull.view.prompt}"
+                android:visibility='@{mainViewModel.accountOrCardNumberFull.name.equals("")? View.GONE : View.VISIBLE}'
+                app:errorText='@{mainViewModel.accountOrCardNumberFull.isCorrect ? "" : mainViewModel.accountOrCardNumberFull.validator.message}'
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/bik_layout"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:ems="10"
+                    android:id="@+id/et_account_or_card_number"
+                    android:hint="@{mainViewModel.accountOrCardNumberFull.view.title}"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@drawable/hint_selector"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/payment_type_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility='@{mainViewModel.urgentFull.name.equals("")? View.GONE : View.VISIBLE}'
+                android:hint="@{mainViewModel.urgentFull.view.title}"
+                app:errorText='@{mainViewModel.urgentType != null ? "" : mainViewModel.urgentFull.validator.message}'
+                app:hintAnimationEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/account_or_card_number"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:theme="@style/TextInputLayoutAppearance"
+                android:layout_marginEnd="16dp">
+            <AutoCompleteTextView
+                    android:id="@+id/payment_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext|flagNoExtractUi"
+                    android:singleLine="true"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:text="@{mainViewModel.urgentFull.view.prompt}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+                    android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+                    android:drawableTint="@color/cardview_dark_background"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/l_name_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@{mainViewModel.lNameFull.view.prompt}"
+                android:visibility='@{mainViewModel.lNameFull.name.equals("")? View.GONE : View.VISIBLE}'
+                app:errorText='@{mainViewModel.lNameFull.isCorrect ? "" : mainViewModel.lNameFull.validator.message}'
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/payment_type_layout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_first_name"
+                android:hint="@{mainViewModel.lNameFull.view.title}"
+                android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.lNameFull)}"
+                android:textColorHint="@drawable/hint_selector"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/f_name_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@{mainViewModel.fNameFull.view.prompt}"
+                android:visibility='@{mainViewModel.fNameFull.name.equals("")? View.GONE : View.VISIBLE}'
+                app:errorText='@{mainViewModel.fNameFull.isCorrect ? "" : mainViewModel.fNameFull.validator.message}'
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/l_name_layout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_last_name"
+                android:hint="@{mainViewModel.fNameFull.view.title}"
+                android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.fNameFull)}"
+                android:textColorHint="@drawable/hint_selector"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/m_name_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@{mainViewModel.mNameFull.view.prompt}"
+                android:visibility='@{mainViewModel.mNameFull.name.equals("")? View.GONE : View.VISIBLE}'
+                app:errorText='@{mainViewModel.mNameFull.isCorrect ? "" : mainViewModel.mNameFull.validator.message}'
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/f_name_layout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_middle_name"
+                android:hint="@{mainViewModel.mNameFull.view.title}"
+                android:onTextChanged = "@{(text, start, before, count) -> mainViewModel.onFormFieldTextChanged(text, mainViewModel.mNameFull)}"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
